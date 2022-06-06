@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 public class MemberJpaRepository {
 
     @PersistenceContext
-    private EntityManager em; // Injection EntityManager from spring IOC container
+    private EntityManager em;
 
     public Member save(Member member) {
         em.persist(member);

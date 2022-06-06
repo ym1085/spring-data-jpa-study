@@ -18,7 +18,6 @@ class MemberJpaRepositoryTest {
     @Autowired MemberJpaRepository memberJpaRepository;
 
     @Test
-//    @Rollback(false)
     public void testMember() throws Exception {
         //given
         Member member = new Member("memberA");
