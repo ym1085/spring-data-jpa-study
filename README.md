@@ -1,6 +1,17 @@
 # spring-data-jpa-study
 
-personal study
+## 1. 요약(Summary)
+
+spring-data-jpa를 공부하기 위한 목적으로 만들어진 프로젝트입니다.
+
+## 2. 기술 스펙(Tech spec)
+
+| Tech                | Version |
+|---------------------|--------|
+| **Java**            | 1.8    |
+| **Spring Boot**     | 2.5.9  |
+| **Spring-data-jpa** | 2.7.0  |
+| **H2**              | 2.1.2  |
 
 ### 참고 자료
 
