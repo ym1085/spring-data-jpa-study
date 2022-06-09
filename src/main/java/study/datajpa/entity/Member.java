@@ -9,6 +9,10 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "userName", "age"}) // 연관관계 필드는 @ToString 지양
+@NamedQuery(
+        name = "Member.findByUserName",
+        query = "select m from Member m where m.userName = :userName"
+)
 public class Member {
 
     @Id
