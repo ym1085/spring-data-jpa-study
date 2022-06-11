@@ -11,6 +11,7 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -156,5 +157,25 @@ class MemberRepositoryTest {
         for (MemberDto dto : memberDto) {
             System.out.println("----> dto = " + dto);
         }
+    }
+
+    @Test
+    public void findByNaems() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        Member m3 = new Member("CCC", 30);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+        memberRepository.save(m3);
+
+        List<Member> result = memberRepository.findByNames(Arrays.asList("AAA", "BBB", "CCC")); // in
+        System.out.println("[TEST] result.size = " + result.size());
+        for (Member member : result) {
+            System.out.println("[TEST] member = " + member);
+        }
+
+        assertThat(result.get(0).getUserName()).isEqualTo("AAA");
+        assertThat(result.get(1).getUserName()).isEqualTo("BBB");
+        assertThat(result.get(2).getUserName()).isEqualTo("CCC");
     }
 }

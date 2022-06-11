@@ -47,7 +47,7 @@ public class Member {
     }
 
     // 연관관계 편의 메서드 생성
-    // 1(Member) : N(Team)
+    // N(Member) :  1(Team)
     public void changeTeam(Team team) {
         this.team = team;
         team.getMembers().add(this);
