@@ -11,6 +11,7 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -177,5 +178,30 @@ class MemberRepositoryTest {
         assertThat(result.get(0).getUserName()).isEqualTo("AAA");
         assertThat(result.get(1).getUserName()).isEqualTo("BBB");
         assertThat(result.get(2).getUserName()).isEqualTo("CCC");
+    }
+
+    @Test
+    public void returnType() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("AAA", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+//        List<Member> aaa = memberRepository.findListByUserName("AAA");
+//        Member findMember = memberRepository.findMemberByUserName("AAA");
+//        Optional<Member> findMember = memberRepository.findOptionalByUserName("AAA");
+//        System.out.println("findMember = " + findMember);
+
+//        List<Member> result = memberRepository.findListByUserName("asassasas");// Collection에 데이터가 없는 경우 => ? => 빈 컬렉션을 반환 해준다
+//        System.out.println("result = "+ result.size());
+//
+//        Optional<Member> findMember = memberRepository.findOptionalByUserName("aasassas"); // 단건 데이터가 없는 경우 => ? => 없으면 null을 반환 한다
+//        System.out.println("findMember = " + findMember);
+//
+//        Member findMemberTest = memberRepository.findMemberByUserName("asdasdasd");
+//        System.out.println("findMemberTest = " + findMemberTest);
+
+        Optional<Member> findMember = memberRepository.findOptionalByUserName("AAA"); // 단건 데이터가 아닌, 여러개의 데이터가 존재하는 경우 -> Exception 발생
+        System.out.println("findMember = " + findMember);
     }
 }
