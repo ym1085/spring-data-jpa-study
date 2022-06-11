@@ -5,12 +5,18 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
+@DisplayName("스프링 데이터 JPA 기반 테스트")
 class MemberRepositoryTest {
 
     @Autowired MemberRepository memberRepository;
@@ -26,7 +33,7 @@ class MemberRepositoryTest {
 
     @Test
     @Rollback(false)
-    public void test() throws Exception {
+    public void test() {
         System.out.println("TEST = memberRepository = " + memberRepository.getClass());
 
         //given
@@ -45,7 +52,7 @@ class MemberRepositoryTest {
     @Test
     @Rollback(false)
     @DisplayName("기본 CRUD 기능 테스트")
-    public void basicCRUD() throws Exception {
+    public void basicCRUD() {
         //given
         Member member1 = new Member("member1");
         Member member2 = new Member("member2");
@@ -156,5 +163,114 @@ class MemberRepositoryTest {
         for (MemberDto dto : memberDto) {
             System.out.println("----> dto = " + dto);
         }
+    }
+
+    @Test
+    public void findByNaems() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        Member m3 = new Member("CCC", 30);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+        memberRepository.save(m3);
+
+        List<Member> result = memberRepository.findByNames(Arrays.asList("AAA", "BBB", "CCC")); // in
+        System.out.println("[TEST] result.size = " + result.size());
+        for (Member member : result) {
+            System.out.println("[TEST] member = " + member);
+        }
+
+        assertThat(result.get(0).getUserName()).isEqualTo("AAA");
+        assertThat(result.get(1).getUserName()).isEqualTo("BBB");
+        assertThat(result.get(2).getUserName()).isEqualTo("CCC");
+    }
+
+    @Test
+    public void returnType() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("AAA", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+//        List<Member> aaa = memberRepository.findListByUserName("AAA");
+//        Member findMember = memberRepository.findMemberByUserName("AAA");
+//        Optional<Member> findMember = memberRepository.findOptionalByUserName("AAA");
+//        System.out.println("findMember = " + findMember);
+
+//        List<Member> result = memberRepository.findListByUserName("asassasas");// Collection에 데이터가 없는 경우 => ? => 빈 컬렉션을 반환 해준다
+//        System.out.println("result = "+ result.size());
+//
+//        Optional<Member> findMember = memberRepository.findOptionalByUserName("aasassas"); // 단건 데이터가 없는 경우 => ? => 없으면 null을 반환 한다
+//        System.out.println("findMember = " + findMember);
+//
+//        Member findMemberTest = memberRepository.findMemberByUserName("asdasdasd");
+//        System.out.println("findMemberTest = " + findMemberTest);
+
+        Optional<Member> findMember = memberRepository.findOptionalByUserName("AAA"); // 단건 데이터가 아닌, 여러개의 데이터가 존재하는 경우 -> Exception 발생
+        System.out.println("findMember = " + findMember);
+    }
+
+    @Test
+    @DisplayName("스프링 데이터 JPA 페이징 테스트")
+    public void paging() {
+        //given
+        createMemberForPaging(); // 데이터 생성
+
+        //when : Page<T>
+        int age = 10;
+        int offset = 0;
+        int limit = 9;
+        PageRequest page = PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "id"));
+
+        Slice<Member> slice = memberRepository.findSliceByAge(age, page);
+        System.out.println("slice = " + slice);
+
+//        Page<Member> resultWithPaging = memberRepository.findPagingByAge(age, page);
+        /*System.out.println("[TEST] resultWithPaging.getContent() = " + resultWithPaging.getContent()); // 페이징 처리에 의해 출력되는 데이터
+        System.out.println("[TEST] resultWithPaging.getSize() = " + resultWithPaging.getSize()); // 페이징 처리에 의해 출력된 데이터의 사이즈
+        System.out.println("[TEST] resultWithPaging.getTotalPages() = " + resultWithPaging.getTotalPages()); // 총 페이지 수
+        System.out.println("[TEST] resultWithPaging.getTotalElements() = " + resultWithPaging.getTotalElements()); // 총 데이터 수
+        System.out.println("[TEST] resultWithPaging.getNumber() = " + resultWithPaging.getNumber()); // 페이지 번호
+        System.out.println("[TEST] resultWithPaging.isFirst() = " + resultWithPaging.isFirst()); // 첫번째 페이지 여부
+        System.out.println("[TEST] resultWithPaging.hasNext() = " + resultWithPaging.hasNext()); // 다음 페이지 여부*/
+
+        //then
+//        assertThat(resultWithPaging.getContent()).isNotEmpty();
+//        assertThat(resultWithPaging.getSize()).isEqualTo(9);
+//        assertThat(resultWithPaging.getTotalPages()).isEqualTo(2);
+//        assertThat(resultWithPaging.getTotalElements()).isEqualTo(13);
+//        assertThat(resultWithPaging.getNumber()).isEqualTo(0); // JPA는 0부터 페이지 시작
+//        assertThat(resultWithPaging.isFirst()).isTrue();
+//        assertThat(resultWithPaging.hasNext()).isTrue();
+    }
+
+    private void createMemberForPaging() {
+        Member m1 = new Member("ymkim", 10);
+        Member m2 = new Member("youngsik", 10);
+        Member m3 = new Member("soohyun", 10);
+        Member m4 = new Member("mini", 10);
+        Member m5 = new Member("jujung", 10);
+        Member m6 = new Member("heshoo", 10);
+        Member m7 = new Member("namil", 10);
+        Member m8 = new Member("jaewoo", 10);
+        Member m9 = new Member("ytjtjtj", 10);
+        Member m10 = new Member("asdqwe", 10);
+        Member m11 = new Member("asdqwe", 99); // fail
+        Member m12 = new Member("asdqwe", -1); // fail
+        Member m13 = new Member("asdqwe", 66); // fail
+
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+        memberRepository.save(m3);
+        memberRepository.save(m4);
+        memberRepository.save(m5);
+        memberRepository.save(m6);
+        memberRepository.save(m7);
+        memberRepository.save(m8);
+        memberRepository.save(m9);
+        memberRepository.save(m10);
+        memberRepository.save(m11);
+        memberRepository.save(m12);
+        memberRepository.save(m13);
     }
 }
