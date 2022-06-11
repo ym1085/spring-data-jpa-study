@@ -9,7 +9,8 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        #show_sql: true # print query to console
+#        dialect: org.hibernate.dialect....
+        show_sql: true # print query to console
         format_sql: true # format query
 
 logging.level:
