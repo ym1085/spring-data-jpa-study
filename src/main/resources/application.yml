@@ -10,7 +10,7 @@ spring:
     properties:
       hibernate:
 #        dialect: org.hibernate.dialect....
-        show_sql: true # print query to console
+#        show_sql: true # print query to console
         format_sql: true # format query
 
 logging.level:
