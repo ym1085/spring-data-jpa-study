@@ -338,4 +338,29 @@ class MemberRepositoryTest {
             System.out.println("member.team = " + member.getTeam().getName());
         }
     }
+
+    @Test
+    public void queryHint() {
+        //given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush(); // 1차 캐시의 결과를 DB 동기화, 영속성 컨텍스트를 비우는 것이 아니다.
+        em.clear();
+
+        //when
+        Member findMember = memberRepository.findReadOnlyByUserName("member1"); // 100% 조회용으로만 사용할거다...
+        findMember.setUserName("member2");
+
+        em.flush(); // Dirty checking
+    }
+
+    @Test
+    public void lock() {
+        //given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        //when
+        List<Member> result = memberRepository.findLockByUserName("member1");
+    }
 }
