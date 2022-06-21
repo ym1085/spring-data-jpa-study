@@ -1,6 +1,7 @@
 package study.datajpa.repository;
 
 import org.assertj.core.api.Assertions;
+import org.hibernate.boot.TempTableDdlTransactionHandling;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -362,5 +363,14 @@ class MemberRepositoryTest {
 
         //when
         List<Member> result = memberRepository.findLockByUserName("member1");
+    }
+
+    @Test
+    public void callCustom() {
+        //given
+        List<Member> result = memberRepository.findMemberCustom();
+        //when
+
+        //then
     }
 }

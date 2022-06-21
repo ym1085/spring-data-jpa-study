@@ -14,7 +14,7 @@ import javax.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
 
     List<Member> findByUserNameAndAgeGreaterThan(String userName, int age);
 
@@ -85,4 +85,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    @Lock(LockModeType.PESSIMISTIC_FORCE_INCREMENT)
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Member> findLockByUserName(String userName);
+
+
 }
