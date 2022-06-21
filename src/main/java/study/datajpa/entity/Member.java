@@ -13,7 +13,7 @@ import java.util.List;
         name = "Member.findByUserName",
         query = "select m from Member m where m.userName = :userName"
 )
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue
