@@ -12,6 +12,12 @@ spring:
 #        dialect: org.hibernate.dialect....
 #        show_sql: true # print query to console
         format_sql: true # format query
+  data:
+    web:
+      pageable:
+        default-page-size: 10 # default page size
+        max-page-size: 200
+        one-indexed-parameters: true
 
 logging.level:
   org.hibernate.SQL: debug
