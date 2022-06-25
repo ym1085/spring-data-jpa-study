@@ -373,4 +373,45 @@ class MemberRepositoryTest {
 
         //then
     }
+
+    @Test
+    @DisplayName("persist, merge 테스트")
+    @Rollback(false)
+    public void saveEntityTest() {
+        //given
+        //별도의 id 값을 셋팅 하지 않았음
+        Member member = new Member("김영민", 30);
+        System.out.println("[TEST-01] member = " + member.getClass()); // class study.datajpa.entity.Member
+
+        //when
+        Member savedMember = memberRepository.save(member);
+        System.out.println("[TEST-01] savedMember = " + savedMember.getClass()); // class study.datajpa.entity.Member
+
+        Member findMember = memberRepository.findById(savedMember.getId()).get();
+        System.out.println("[TEST-01] findMember = " + findMember);
+
+        //then
+        assertThat(em.contains(member)).isTrue();
+        assertThat(em.contains(savedMember)).isTrue();
+        assertThat(member == savedMember);
+        System.out.println("[TEST-01] member = " + member);
+        System.out.println("[TEST-01] savedMember = " + savedMember);
+        System.out.println("[TEST-01] member = savedMember = " + (member == savedMember) + "\n");
+
+        //-----------------------------------------------------------
+
+        //given
+        Member member2 = new Member(member.getId(), "김정준", 29);
+        System.out.println("[TEST-02] member2 = " + member.getClass());
+
+        //when
+        Member updatedMember = memberRepository.save(member2);
+        System.out.println("[TEST-02] updatedMember = " + updatedMember.getClass());
+
+        //then
+        assertThat(em.contains(updatedMember)).isTrue();
+        assertThat(em.contains(member2)).isFalse();
+        assertThat(updatedMember == member2).isFalse(); // merge를 통해 나온 객체는 동일한 객체가 아니다
+        System.out.println("updateMember == member2 = " + (updatedMember == member2));
+    }
 }
