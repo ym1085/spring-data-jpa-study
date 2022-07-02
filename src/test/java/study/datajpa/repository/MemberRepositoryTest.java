@@ -458,4 +458,37 @@ class MemberRepositoryTest {
         List<Member> result = memberRepository.findAll(example);
         assertThat(result.get(0).getUserName()).isEqualTo("m1");
     }
+
+    @Test
+    public void projections() {
+        Team teamA = new Team("teamA");
+        em.persist(teamA);
+
+        Member m1 = new Member("m1", 0, teamA);
+        Member m2 = new Member("m2", 0, teamA);
+        em.persist(m1);
+        em.persist(m2);
+
+        em.flush();
+        em.clear();
+
+        // 인터페이스 기반의 Project 적용
+        /*List<UserNameOnly> resultList = memberRepository.findProjectionsByUserName("m1");
+        for (UserNameOnly result : resultList) {
+            System.out.println("result = " + result);
+        }*/
+
+        // 클래스 기반의 Projection 생성 + 동적 Projection -> 제네릭
+        /*List<UserNameOnlyDto> resultList = memberRepository.findProjectionsByUserName("m1", UserNameOnlyDto.class);
+        for (UserNameOnlyDto result : resultList) {
+            System.out.println("[>>>>>>>>>>>>>>>>] result = " + result.getUserName());
+        }*/
+
+        // 중첩 Projection - NestedClosedProjection
+        List<NestedClosedProjection> resultList = memberRepository.findProjectionsByUserName("m1", NestedClosedProjection.class);
+        for (NestedClosedProjection result : resultList) {
+            System.out.println("[>>>>>>>>>>>>>>>>] result = " + result.getUserName());
+            System.out.println("[>>>>>>>>>>>>>>>>] result = " + result.getTeam().getName());
+        }
+    }
 }
