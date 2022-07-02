@@ -91,4 +91,14 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 //    List<UserNameOnlyDto> findProjectionsByUserName(@Param("userName") String userName); // 클래스 기반 Projection
 
     <T> List<T> findProjectionsByUserName(@Param("userName") String userName, Class<T> type); // 클래스 기반 Projection + 동적 Projection [제네릭 타입]
+
+    @Query(value = "select * from member where user_name = ?", nativeQuery = true)
+    Member findByNativeQuery(String userName);
+
+    @Query(value = "select m.member_id as id, m.user_name as userName, t.name as teamName " +
+            "from member m left join team t ", // ANSI SQL 표준
+            countQuery = "select count(*) from member " , // Native Query Count Query가 들어가야함
+            nativeQuery = true)
+    Page<MemberProjection> findByNativeProjection(Pageable pageable);
+
 }
